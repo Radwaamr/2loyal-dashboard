@@ -18,8 +18,10 @@ CONN_STR = f"mysql+pymysql://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}?c
 
 @st.cache_data(ttl=300)
 def load_table(name):
-    return pd.read_csv(f"{name}.csv")
-
+    df = pd.read_csv(f"{name}.csv")
+    if 'created_at' in df.columns:
+        df['created_at'] = pd.to_datetime(df['created_at'], errors='coerce')
+    return df
 
 # -----------------------
 # Helper: bordered metric card
